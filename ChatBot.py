@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 # Libraries
 from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()

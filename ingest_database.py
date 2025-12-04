@@ -1,47 +1,43 @@
+
+
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_chroma import Chroma
+# from langchain_huggingface import HuggingFaceEmbeddings
 from uuid import uuid4
-
-# import the .env file
 from dotenv import load_dotenv
 load_dotenv()
 
-# configuration
 DATA_PATH = r"data"
 CHROMA_PATH = r"chroma_db"
 
-from langchain_huggingface import HuggingFaceEmbeddings
+# --- GOOGLE GEMINI EMBEDDINGS ---
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+embeddings_model = GoogleGenerativeAIEmbeddings(model="all-MiniLM-L6-v2")
 
-embeddings_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-
-# initiate the vector store
+# Create vector store
 vector_store = Chroma(
     collection_name="example_collection",
     embedding_function=embeddings_model,
     persist_directory=CHROMA_PATH,
 )
 
-# loading the PDF document
+# Load PDFs
 loader = PyPDFDirectoryLoader(DATA_PATH)
-
 raw_documents = loader.load()
 
-# splitting the document
+# Split text
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=300,
     chunk_overlap=100,
-    length_function=len,
-    is_separator_regex=False,
 )
 
-# creating the chunks
 chunks = text_splitter.split_documents(raw_documents)
 
-# creating unique ID's
+# Create IDs
 uuids = [str(uuid4()) for _ in range(len(chunks))]
 
-# adding chunks to vector store
+# Add to vector DB
 vector_store.add_documents(documents=chunks, ids=uuids)
 
+print("Ingestion complete!")
