@@ -13,7 +13,7 @@ load_dotenv()
 # --- CONFIGURATION ---
 CHROMA_PATH = r"chroma_db"
 
-os.environ["GOOGLE_API_KEY"] = "AIzaSyA1z-VN6Grq3d0QcsuXFNrR-rmGF8gt5-U"
+os.environ["GOOGLE_API_KEY"] = ""
 
 # 1. Setup Embeddings 
 print("Loading Embeddings...")
